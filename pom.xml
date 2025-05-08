@@ -56,6 +56,8 @@
 							<!-- Aseguramos que la variable de encriptación sea correcta -->
 							<secure.key>${decryption.key}</secure.key>
 							<encryption.key>${encryption.key}</encryption.key>
+							<!-- Deshabilitar modo mock -->
+							<apikit.mock.disable>true</apikit.mock.disable>
 						</properties>
 					</cloudhub2Deployment>
 				</configuration>
