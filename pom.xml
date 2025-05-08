@@ -40,7 +40,7 @@
 						<muleVersion>${app.runtime}</muleVersion>
 						<username>${anypoint.username}</username>
 						<password>${anypoint.password}</password>
-						<applicationName>s-test-svalerdos</applicationName>
+						<applicationName>p-test-svalerdos</applicationName>
 						<replicas>1</replicas>
 						<vCores>0.1</vCores>
 						<deploymentTimeout>300000</deploymentTimeout>
