@@ -127,7 +127,7 @@ output application/json
         </error-handler>
     </flow>
     <flow name="get:\accounts:p-test-svalerperez-config">
-        <http:request method="GET" doc:name="Request" doc:id="4eb6278b-3c59-4c06-b443-db37f89ffdc2" config-ref="HTTP_Request_configuration" path="/contact">
+        <http:request method="GET" doc:name="Request" doc:id="4eb6278b-3c59-4c06-b443-db37f89ffdc2" config-ref="HTTP_Request_configuration" path="/accounts">
 			<http:headers ><![CDATA[#[output application/java
 ---
 {
@@ -140,7 +140,8 @@ output application/json
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-payload]]></ee:set-payload>
+log("Llego al programa")
+log(payload)]]></ee:set-payload>
             </ee:message>
         </ee:transform>
     </flow>
