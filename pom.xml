@@ -2,9 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.mycompany</groupId>
+	<groupId>153b0d20-821e-4f82-b36a-7e0e28e44a93</groupId>
 	<artifactId>p-test-svalerdos</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version> 
+	<!-- He quitado lo de SNAPSHOT -->
 	<packaging>mule-application</packaging>
 
 	<name>p-test-svalerdos</name>
@@ -14,7 +15,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<app.runtime>4.9.0</app.runtime>
-		<mule.maven.plugin.version>4.3.0</mule.maven.plugin.version>
+		<mule.maven.plugin.version>4.4.0</mule.maven.plugin.version>
 	</properties>
 
 	<build>
@@ -29,12 +30,41 @@
 				<artifactId>mule-maven-plugin</artifactId>
 				<version>${mule.maven.plugin.version}</version>
 				<extensions>true</extensions>
+				<configuration>
+					<classifier>mule-application</classifier>
+					<cloudhub2Deployment>
+						<uri>https://anypoint.mulesoft.com</uri>
+						<provider>MC</provider>
+						<environment>Sandbox</environment>
+						<target>Cloudhub-US-East-2</target>
+						<muleVersion>${app.runtime}</muleVersion>
+						<username>${anypoint.username}</username>
+						<password>${anypoint.password}</password>
+						<applicationName>s-test-svalerdos</applicationName>
+						<replicas>1</replicas>
+						<vCores>0.1</vCores>
+						<deploymentTimeout>300000</deploymentTimeout>
+						<skipDeploymentVerification>true</skipDeploymentVerification>
+						<!-- Añadido para compatibilidad con CloudHub 2.0 -->
+						<javaVersion>17</javaVersion>
+						<deploymentSettings>
+							<enforceDeployingReplicasAcrossNodes>false</enforceDeployingReplicasAcrossNodes>
+							<updateStrategy>rolling</updateStrategy>
+						</deploymentSettings>
+						<properties>
+							<env>dev</env>
+							<!-- Aseguramos que la variable de encriptación sea correcta -->
+							<secure.key>${decryption.key}</secure.key>
+							<encryption.key>${encryption.key}</encryption.key>
+						</properties>
+					</cloudhub2Deployment>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
 
 	<dependencies>
-		<dependency>
+	<dependency>
 			<groupId>org.mule.connectors</groupId>
 			<artifactId>mule-http-connector</artifactId>
 			<version>1.10.3</version>
@@ -47,6 +77,12 @@
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>
+			<groupId>org.mule.modules</groupId>
+			<artifactId>mule-apikit-module</artifactId>
+			<version>1.11.3</version>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
 			<groupId>153b0d20-821e-4f82-b36a-7e0e28e44a93</groupId>
 			<artifactId>p-test-svalerperez</artifactId>
 			<version>1.0.7</version>
@@ -54,9 +90,15 @@
 			<type>zip</type>
 		</dependency>
 		<dependency>
-			<groupId>org.mule.modules</groupId>
-			<artifactId>mule-apikit-module</artifactId>
-			<version>1.11.3</version>
+			<groupId>com.mulesoft.connectors</groupId>
+			<artifactId>mule-salesforce-connector</artifactId>
+			<version>10.22.5</version>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
+			<groupId>com.mulesoft.modules</groupId>
+			<artifactId>mule-secure-configuration-property-module</artifactId>
+			<version>1.2.7</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
 	</dependencies>
