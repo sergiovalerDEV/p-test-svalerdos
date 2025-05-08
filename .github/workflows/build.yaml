@@ -11,6 +11,7 @@ jobs:
     steps:     
     - name: Checkout this repo       
       uses: actions/checkout@v4     
+    
     - name: Cache dependencies       
       uses: actions/cache@v4       
       with:         
@@ -18,12 +19,13 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}         
         restore-keys: |           
           ${{ runner.os }}-maven-     
+    
     - name: Set up JDK 1.8       
       uses: actions/setup-java@v4       
       with:         
         distribution: 'zulu'         
         java-version: 8  
-    # Configure Maven settings
+    
     - name: Configure Maven settings with Anypoint credentials
       run: |
         mkdir -p ~/.m2
@@ -36,6 +38,7 @@ jobs:
             </server>
           </servers>
         </settings>" > ~/.m2/settings.xml
+    
     - name: Build with Maven
       env:
         ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
@@ -44,8 +47,9 @@ jobs:
         rm -rf ~/.m2/repository/com/github/everit-org
         rm -rf ~/.m2/repository/org/everit
         
-        # Compilar con parámetros necesarios
-        mvn -B clean package --file pom.xml -Ddecryption.key="${ENCRYPTION_KEY}" -Dencryption.key="${ENCRYPTION_KEY}"
+        # Compilar el proyecto
+        mvn -B clean package -Dencryption.key="${ENCRYPTION_KEY}" -Ddecryption.key="${ENCRYPTION_KEY}"
+    
     - name: Upload artifact        
       uses: actions/upload-artifact@v4       
       with:           
@@ -58,11 +62,13 @@ jobs:
     steps:         
     - name: Checkout this repo       
       uses: actions/checkout@v4     
+    
     - name: Set up JDK 1.8       
       uses: actions/setup-java@v4       
       with:         
         distribution: 'zulu'         
         java-version: 8
+    
     - name: Cache dependencies       
       uses: actions/cache@v4       
       with:         
@@ -70,11 +76,13 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}         
         restore-keys: |           
           ${{ runner.os }}-maven-     
+    
     - name: Download artifacts
       uses: actions/download-artifact@v4       
       with:         
         name: artifacts
         path: target/
+    
     - name: Configure Maven settings with Anypoint credentials
       run: |
         mkdir -p ~/.m2
@@ -87,87 +95,21 @@ jobs:
             </server>
           </servers>
         </settings>" > ~/.m2/settings.xml
+    
     - name: Deploy to Sandbox
       env:
-        ANYPOINT_USERNAME: ${{ secrets.ANYPOINT_PLATFORM_USERNAME }}
-        ANYPOINT_PASSWORD: ${{ secrets.ANYPOINT_PLATFORM_PASSWORD }}
         ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
       run: |
-        # Instalar jq para procesar JSON
-        sudo apt-get update && sudo apt-get install -y jq
+        # Obtener el nombre del archivo JAR
+        JAR_FILE=$(ls target/*.jar | head -1)
         
-        # Obtener token de autenticación
-        echo "Obteniendo token de autenticación..."
-        TOKEN_RESPONSE=$(curl -s -X POST \
-          "https://anypoint.mulesoft.com/accounts/login" \
-          -H "Content-Type: application/json" \
-          -d "{\"username\":\"${ANYPOINT_USERNAME}\",\"password\":\"${ANYPOINT_PASSWORD}\"}")
-        
-        TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.access_token')
-        
-        if [ -z "$TOKEN" ] || [ "$TOKEN" == "null" ]; then
-          echo "Error: No se pudo obtener el token de autenticación"
-          echo "Respuesta completa: $TOKEN_RESPONSE"
-          exit 1
-        fi
-        
-        echo "Token obtenido correctamente"
-        
-        # Obtener información de la organización y el entorno
-        echo "Obteniendo información de la organización..."
-        ORG_ID=$(curl -s -X GET \
-          "https://anypoint.mulesoft.com/accounts/api/me" \
-          -H "Authorization: Bearer ${TOKEN}" | jq -r '.user.organizationId')
-        
-        echo "ID de organización: $ORG_ID"
-        
-        echo "Obteniendo información del entorno Sandbox..."
-        ENV_RESPONSE=$(curl -s -X GET \
-          "https://anypoint.mulesoft.com/accounts/api/organizations/${ORG_ID}/environments" \
-          -H "Authorization: Bearer ${TOKEN}")
-        
-        ENV_ID=$(echo $ENV_RESPONSE | jq -r '.data[] | select(.name=="Sandbox") | .id')
-        
-        if [ -z "$ENV_ID" ] || [ "$ENV_ID" == "null" ]; then
-          echo "Error: No se pudo encontrar el entorno Sandbox"
-          echo "Respuesta: $ENV_RESPONSE"
-          exit 1
-        fi
-        
-        echo "ID de entorno Sandbox: $ENV_ID"
-        
-        # Verificar si la aplicación existe en CloudHub 2.0 usando la API de Runtime Manager
-        echo "Verificando si la aplicación p-test-svalerdos existe en CloudHub 2.0..."
-        
-        # Listar todas las aplicaciones en CloudHub 2.0
-        APPS_RESPONSE=$(curl -s -X GET \
-          "https://anypoint.mulesoft.com/amc/application-manager/api/v2/organizations/${ORG_ID}/environments/${ENV_ID}/deployments" \
-          -H "Authorization: Bearer ${TOKEN}")
-        
-        # Buscar la aplicación por nombre
-        APP_EXISTS=$(echo $APPS_RESPONSE | jq -r '.items[] | select(.name=="p-test-svalerdos") | .name')
-        
-        if [ ! -z "$APP_EXISTS" ] && [ "$APP_EXISTS" != "null" ]; then
-          echo "La aplicación p-test-svalerdos existe en CloudHub 2.0"
-          
-          # Obtener el ID de la aplicación
-          APP_ID=$(echo $APPS_RESPONSE | jq -r '.items[] | select(.name=="p-test-svalerdos") | .id')
-          echo "ID de la aplicación: $APP_ID"
-          
-          echo "La aplicación será actualizada automáticamente durante el despliegue"
-        else
-          echo "La aplicación p-test-svalerdos no existe en CloudHub 2.0, se creará una nueva instancia"
-        fi
-        
-        # Desplegar la aplicación con parámetros específicos para CloudHub 2.0
-        echo "Desplegando la aplicación..."
-        mvn deploy -DmuleDeploy \
-        -DskipDeploymentVerification=true \
-        -DskipMuleVersionCompatibilityCheck=true \
-        -Danypoint.username="${ANYPOINT_USERNAME}" \
-        -Danypoint.password="${ANYPOINT_PASSWORD}" \
-        -Ddecryption.key="${ENCRYPTION_KEY}" \
-        -Dencryption.key="${ENCRYPTION_KEY}" \
-        -Dapp.runtime=4.9.3 \
-        -Djava.version=17 \
-        -Dmule.artifact=$(ls target/*.jar | head -1)
+        # Desplegar la aplicación usando mule-maven-plugin
+        mvn mule:deploy -DmuleDeploy \
+          -Dmule.artifact="${JAR_FILE}" \
+          -Danypoint.username="${{ secrets.ANYPOINT_PLATFORM_USERNAME }}" \
+          -Danypoint.password="${{ secrets.ANYPOINT_PLATFORM_PASSWORD }}" \
+          -Dapp.runtime=4.9.3 \
+          -Dencryption.key="${ENCRYPTION_KEY}" \
+          -Ddecryption.key="${ENCRYPTION_KEY}" \
+          -DskipTests \
+          -DskipDeploymentVerification=true

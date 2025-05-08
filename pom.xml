@@ -101,12 +101,6 @@
 			<classifier>raml</classifier>
 			<type>zip</type>
 		</dependency>
-		<!-- Añadida la dependencia de JSON Schema -->
-		<dependency>
-			<groupId>com.github.everit-org.json-schema</groupId>
-			<artifactId>org.everit.json.schema</artifactId>
-			<version>1.12.2</version>
-		</dependency>
 	</dependencies>
 
 	<repositories>
@@ -120,20 +114,6 @@
 			<id>mulesoft-releases</id>
 			<name>MuleSoft Releases Repository</name>
 			<url>https://repository.mulesoft.org/releases/</url>
-			<layout>default</layout>
-		</repository>
-		<!-- Añadido el repositorio JitPack para resolver la dependencia -->
-		<repository>
-			<id>jitpack.io</id>
-			<name>JitPack Repository</name>
-			<url>https://jitpack.io</url>
-			<layout>default</layout>
-		</repository>
-		<!-- Añadido el repositorio de MuleSoft Public -->
-		<repository>
-			<id>MuleSoft-public</id>
-			<name>MuleSoft Public Repository</name>
-			<url>https://repository-master.mulesoft.org/nexus/content/repositories/public/</url>
 			<layout>default</layout>
 		</repository>
 	</repositories>
