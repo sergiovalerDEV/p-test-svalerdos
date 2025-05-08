@@ -4,7 +4,10 @@
         <http:listener-connection host="0.0.0.0" port="8081" />
     </http:listener-config>
     <apikit:config name="p-test-svalerperez-config" api="resource::153b0d20-821e-4f82-b36a-7e0e28e44a93:p-test-svalerperez:1.0.10:raml:zip:p-test-svalerperez.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
-    <flow name="p-test-svalerperez-main">
+    <http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="decb41f3-64c6-4791-8936-49bdbd2b585d" basePath="/api" >
+		<http:request-connection host="s-test-svalerdos-proxy-g0uz3s.5sc6y6-2.usa-e2.cloudhub.io" port="443" protocol="HTTPS"/>
+	</http:request-config>
+	<flow name="p-test-svalerperez-main">
         <http:listener config-ref="p-test-svalerperez-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers>#[vars.outboundHeaders default {}]</http:headers>
@@ -124,17 +127,20 @@ output application/json
         </error-handler>
     </flow>
     <flow name="get:\accounts:p-test-svalerperez-config">
-        <ee:transform doc:name="Transform Message">
+        <http:request method="GET" doc:name="Request" doc:id="4eb6278b-3c59-4c06-b443-db37f89ffdc2" config-ref="HTTP_Request_configuration" path="/contact">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"client_secret" : "7E425DA00A9A4DB4abADDFAf546809bB",
+	"client_id" : "d4b1a0102c0746d69ef7865b164ba591"
+}]]]></http:headers>
+		</http:request>
+		<ee:transform doc:name="Transform Message">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-[
-  {
-    id: 1,
-    name: "John SmithLocal"
-  }
-] as Array {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+payload]]></ee:set-payload>
             </ee:message>
         </ee:transform>
     </flow>
