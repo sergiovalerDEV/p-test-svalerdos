@@ -3,8 +3,8 @@
     <http:listener-config name="p-test-svalerperez-httpListenerConfig">
         <http:listener-connection host="0.0.0.0" port="8081" />
     </http:listener-config>
-    <apikit:config name="p-test-svalerperez-config" api="resource::153b0d20-821e-4f82-b36a-7e0e28e44a93:p-test-svalerperez:1.0.10:raml:zip:p-test-svalerperez.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" disableValidations="true" parser="RAML" />
-    <http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="87966332-7929-46cf-ae63-4ac452cad7c1" basePath="/api" >
+    <apikit:config name="p-test-svalerperez-config" api="resource::153b0d20-821e-4f82-b36a-7e0e28e44a93:p-test-svalerperez:1.0.10:raml:zip:p-test-svalerperez.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="fd0c6091-d631-49d0-a3e7-2f5152060bd5" basePath="/api" >
 		<http:request-connection host="s-test-svalerdos-proxy-g0uz3s.5sc6y6-2.usa-e2.cloudhub.io" port="443" protocol="HTTPS"/>
 	</http:request-config>
 	<flow name="p-test-svalerperez-main">
@@ -127,8 +127,7 @@ output application/json
         </error-handler>
     </flow>
     <flow name="get:\accounts:p-test-svalerperez-config">
-        <logger level="INFO" message="Antes de la solicitud HTTP a /accounts" />
-        <http:request method="GET" doc:name="Request" doc:id="522cf446-8210-4e7b-94d1-102a714e0b38" config-ref="HTTP_Request_configuration" path="/accounts">
+        <http:request method="GET" doc:name="Request" doc:id="579d6776-0a3c-45c3-9e64-4f1d269e8196" config-ref="HTTP_Request_configuration" path="/accounts">
 			<http:headers ><![CDATA[#[output application/java
 ---
 {
@@ -136,7 +135,6 @@ output application/json
 	"client_id" : "d4b1a0102c0746d69ef7865b164ba591"
 }]]]></http:headers>
 		</http:request>
-        <logger level="INFO" message="Después de la solicitud HTTP. Payload: #[payload]" />
 		<ee:transform doc:name="Transform Message">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
