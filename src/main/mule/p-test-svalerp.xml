@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
-    <http:listener-config name="p-test-svalerperez-httpListenerConfig">
+    <http:listener-config name="p-test-svalerp-httpListenerConfig">
         <http:listener-connection host="0.0.0.0" port="8081" />
     </http:listener-config>
-    <apikit:config name="p-test-svalerperez-config" api="resource::153b0d20-821e-4f82-b36a-7e0e28e44a93:p-test-svalerperez:1.0.10:raml:zip:p-test-svalerperez.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
-    <flow name="p-test-svalerperez-main">
-        <http:listener config-ref="p-test-svalerperez-httpListenerConfig" path="/api/*">
+    <apikit:config name="p-test-svalerp-config" api="resource::86dc96b8-967c-497a-9384-362f5f475d38:p-test-svalerp:1.0.0:raml:zip:p-test-svalerp.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <flow name="p-test-svalerp-main">
+        <http:listener config-ref="p-test-svalerp-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:response>
@@ -14,7 +14,7 @@
                 <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:error-response>
         </http:listener>
-        <apikit:router config-ref="p-test-svalerperez-config" />
+        <apikit:router config-ref="p-test-svalerp-config" />
         <error-handler>
             <on-error-propagate type="APIKIT:BAD_REQUEST">
                 <ee:transform doc:name="Transform Message">
@@ -96,8 +96,8 @@ output application/json
             </on-error-propagate>
         </error-handler>
     </flow>
-    <flow name="p-test-svalerperez-console">
-        <http:listener config-ref="p-test-svalerperez-httpListenerConfig" path="/console/*">
+    <flow name="p-test-svalerp-console">
+        <http:listener config-ref="p-test-svalerp-httpListenerConfig" path="/console/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:response>
@@ -106,7 +106,7 @@ output application/json
                 <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:error-response>
         </http:listener>
-        <apikit:console config-ref="p-test-svalerperez-config" />
+        <apikit:console config-ref="p-test-svalerp-config" />
         <error-handler>
             <on-error-propagate type="APIKIT:NOT_FOUND">
                 <ee:transform doc:name="Transform Message">
@@ -123,7 +123,7 @@ output application/json
             </on-error-propagate>
         </error-handler>
     </flow>
-    <flow name="get:\accounts:p-test-svalerperez-config">
+    <flow name="get:\accounts:p-test-svalerp-config">
         <ee:transform doc:name="Transform Message">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
@@ -132,7 +132,13 @@ output application/json
 [
   {
     id: 1,
-    name: "John Smith"
+    name: "Juan Pérez",
+    email: "juan@example.com"
+  }, 
+  {
+    id: 2,
+    name: "Ana Gómez",
+    email: "ana@example.com"
   }
 ] as Array {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
             </ee:message>

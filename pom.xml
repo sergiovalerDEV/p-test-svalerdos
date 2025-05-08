@@ -95,9 +95,9 @@
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>
-			<groupId>153b0d20-821e-4f82-b36a-7e0e28e44a93</groupId>
-			<artifactId>p-test-svalerperez</artifactId>
-			<version>1.0.10</version>
+			<groupId>86dc96b8-967c-497a-9384-362f5f475d38</groupId>
+			<artifactId>p-test-svalerp</artifactId>
+			<version>1.0.0</version>
 			<classifier>raml</classifier>
 			<type>zip</type>
 		</dependency>
