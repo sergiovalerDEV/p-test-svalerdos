@@ -2,6 +2,28 @@
   "minMuleVersion": "4.9.0",
   "javaSpecificationVersions": [
     "17"
-  ]
+  ],
+  "secureProperties": [],
+  "redeploymentEnabled": true,
+  "name": "p-test-svalerdos",
+  "requiredProduct": "MULE_EE",
+  "classLoaderModelLoaderDescriptor": {
+    "id": "mule",
+    "attributes": {
+      "exportedPackages": [],
+      "exportedResources": []
+    }
+  },
+  "bundleDescriptorLoader": {
+    "id": "mule",
+    "attributes": {}
+  },
+  "configs": [],
+  "domain": "default",
+  "properties": {
+    "apikit.mock.disable": "true",
+    "apikit.router.ramlPath": "resource::153b0d20-821e-4f82-b36a-7e0e28e44a93:p-test-svalerperez:1.0.10:raml:zip:p-test-svalerperez.raml",
+    "mule.env": "prod"
+  }
   
 }
