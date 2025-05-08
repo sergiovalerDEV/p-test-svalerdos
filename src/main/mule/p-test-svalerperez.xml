@@ -3,7 +3,7 @@
     <http:listener-config name="p-test-svalerperez-httpListenerConfig">
         <http:listener-connection host="0.0.0.0" port="8081" />
     </http:listener-config>
-    <apikit:config name="p-test-svalerperez-config" api="resource::153b0d20-821e-4f82-b36a-7e0e28e44a93:p-test-svalerperez:1.0.8:raml:zip:p-test-svalerperez.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <apikit:config name="p-test-svalerperez-config" api="resource::153b0d20-821e-4f82-b36a-7e0e28e44a93:p-test-svalerperez:1.0.10:raml:zip:p-test-svalerperez.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="p-test-svalerperez-main">
         <http:listener config-ref="p-test-svalerperez-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
@@ -123,7 +123,7 @@ output application/json
             </on-error-propagate>
         </error-handler>
     </flow>
-    <flow name="get:\api\accounts:p-test-svalerperez-config">
+    <flow name="get:\accounts:p-test-svalerperez-config">
         <ee:transform doc:name="Transform Message">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
@@ -132,8 +132,7 @@ output application/json
 [
   {
     id: 1,
-    name: "John Smithhhhh",
-    email: "john.smith@example.com"
+    name: "John Smith"
   }
 ] as Array {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
             </ee:message>
