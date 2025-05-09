@@ -8,7 +8,6 @@ http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/m
     <http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="fd0c6091-d631-49d0-a3e7-2f5152060bd5" basePath="/api" >
 		<http:request-connection host="s-test-svalerdos-g0uz3s.5sc6y6-4.usa-e2.cloudhub.io" port="443" protocol="HTTPS"/>
 	</http:request-config>
-	<api-gateway:autodiscovery apiId="20337776" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="76751dd3-dc8d-4328-86e9-f17face71a21" flowRef="get:\accounts:p-test-svalerperez-config" />
 	<flow name="p-test-svalerperez-main">
         <http:listener config-ref="p-test-svalerperez-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
