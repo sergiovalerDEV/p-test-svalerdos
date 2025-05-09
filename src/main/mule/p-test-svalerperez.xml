@@ -5,7 +5,7 @@
     </http:listener-config>
     <apikit:config name="p-test-svalerperez-config" api="resource::153b0d20-821e-4f82-b36a-7e0e28e44a93:p-test-svalerperez:1.0.10:raml:zip:p-test-svalerperez.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="fd0c6091-d631-49d0-a3e7-2f5152060bd5" basePath="/api" >
-		<http:request-connection host="s-test-svalerdos-proxy-g0uz3s.5sc6y6-2.usa-e2.cloudhub.io" port="443" protocol="HTTPS"/>
+		<http:request-connection host="s-test-svalerdos-g0uz3s.5sc6y6-4.usa-e2.cloudhub.io" port="443" protocol="HTTPS"/>
 	</http:request-config>
 	<flow name="p-test-svalerperez-main">
         <http:listener config-ref="p-test-svalerperez-httpListenerConfig" path="/api/*">
