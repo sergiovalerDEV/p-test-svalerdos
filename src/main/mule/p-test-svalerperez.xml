@@ -130,12 +130,6 @@ output application/json
     </flow>
     <flow name="get:\accounts:p-test-svalerperez-config">
         <http:request method="GET" doc:name="Request" doc:id="579d6776-0a3c-45c3-9e64-4f1d269e8196" config-ref="HTTP_Request_configuration" path="/accounts">
-			<http:headers ><![CDATA[#[output application/java
----
-{
-	"client_secret" : "7E425DA00A9A4DB4abADDFAf546809bB",
-	"client_id" : "d4b1a0102c0746d69ef7865b164ba591"
-}]]]></http:headers>
 		</http:request>
 		<ee:transform doc:name="Transform Message">
             <ee:message>
