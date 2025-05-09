@@ -4,7 +4,7 @@
 
 	<groupId>153b0d20-821e-4f82-b36a-7e0e28e44a93</groupId>
 	<artifactId>p-test-svalerdos</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 	<!-- He quitado lo de SNAPSHOT -->
 	<packaging>mule-application</packaging>
 
